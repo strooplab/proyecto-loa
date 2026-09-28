@@ -27,7 +27,9 @@ export default async function PublicLayout({ children }: { children: React.React
         <Buscar />
         <main className="grow">{children}</main>
         <Footer />
-        <FloatingWhatsApp />
+        <Suspense fallback={<Skeleton className="fixed bottom-6 right-6 z-50 rounded-full" />}>
+          <FloatingWhatsApp />
+        </Suspense>
       </div>
     </ContextProvider>
   );

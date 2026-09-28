@@ -47,6 +47,7 @@ export default function CheckoutPage() {
   });
 
   const [intentoEnviar, setIntentoEnviar] = useState(false);
+  const [rateLimitedUntil, setRateLimitedUntil] = useState<number | null>(null);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
@@ -54,7 +55,7 @@ export default function CheckoutPage() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleEnviarWhatsApp: React.SubmitEventHandler<HTMLFormElement> = (e) => {
+  const handleEnviarWhatsApp = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIntentoEnviar(true);
 
@@ -62,7 +63,12 @@ export default function CheckoutPage() {
     if (!formData.nombre || !formData.celular || !formData.ciudad || !formData.direccion) {
       return; // Detiene el envío si falta un campo
     }
-    handleWhatsAppCheckout(items, subtotal, formData);
+    const result = await handleWhatsAppCheckout(items, subtotal, formData);
+    if (!result.success) {
+      setRateLimitedUntil(result.retryAt);
+      return;
+    }
+    setRateLimitedUntil(null);
   };
 
   return (
@@ -391,6 +397,12 @@ export default function CheckoutPage() {
                         rows={3}
                       />
                     </Field>
+                    {rateLimitedUntil && (
+                      <p className="text-sm text-red-500 mt-2">
+                        Ya enviaste varios mensajes. Intenta de nuevo{" "}
+                        {new Date(rateLimitedUntil).toLocaleTimeString()}.
+                      </p>
+                    )}
                   </Fieldset>
                   <div className="flex flex-col p-4 gap-4 mt-2">
                     <Button
