@@ -1,15 +1,32 @@
 // @/components/ui/FloatingWhatsApp.tsx
-
+"use client";
+import { useState } from "react";
 import Link from "next/link";
-import whatsapp from "@/utils/sendWhatsappMessage";
+import { SendWhatsAppMessage } from "@/utils/sendWhatsappMessage";
 
 export default function FloatingWhatsApp() {
-  const whatsappMessage = whatsapp();
+  const [rateLimitedUntil, setRateLimitedUntil] = useState<number | null>(null);
+  const handleClick = async (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    const result = await SendWhatsAppMessage();
+
+    if (!result.success) {
+      setRateLimitedUntil(result.retryAt);
+      return;
+    }
+
+    setRateLimitedUntil(null);
+
+    if (result.url) {
+      window.open(result.url, "_blank");
+    }
+  };
 
   return (
     <div className="fixed bottom-6 right-6 z-50">
       <Link
-        href={whatsappMessage || ""}
+        href="#"
+        onClick={handleClick}
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Chat de WhatsApp"
@@ -28,6 +45,12 @@ export default function FloatingWhatsApp() {
         <span className="absolute right-full mr-3 hidden px-3 py-1.5 bg-espresso text-cream text-xs font-medium rounded-md shadow-md whitespace-nowrap group-hover:block transition-all">
           ¡Escríbenos por WhatsApp!
         </span>
+        {rateLimitedUntil && (
+          <span className="absolute right-full mr-3 hidden px-3 py-1.5 bg-red-500 text-sm text-cream font-medium rounded-md shadow-md whitespace-nowrap group-hover:block transition-all">
+            Ya enviaste un mensaje recientemente. Intenta de nuevo{" "}
+            {new Date(rateLimitedUntil).toLocaleTimeString()}.
+          </span>
+        )}
       </Link>
     </div>
   );
