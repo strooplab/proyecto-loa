@@ -12,18 +12,15 @@ function classNames(...classes: string[]) {
 }
 
 export default function Navbar({ navigation }: { navigation: NavItem[] }) {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const { activeDrawer, openDrawer } = usePanel();
+  const { activeDrawer, openDrawer } = usePanel(); // Variable global de paneles
+  const { items, isItemAdded } = useCarrito();
   const pathname = usePathname();
 
-  const totalItems = useCarrito((state) => state.getTotalItems());
-
+  const [isScrolled, setIsScrolled] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+
   useEffect(() => {
     setIsMounted(true);
-  }, []);
-
-  useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
@@ -49,6 +46,12 @@ export default function Navbar({ navigation }: { navigation: NavItem[] }) {
   const iconButtonHover = effectiveScrolled
     ? "hover:bg-espresso/5 active:bg-espresso/20"
     : "hover:bg-cream/5 active:bg-cream/20";
+
+  // Calcular el número total de items
+  const totalItems = Array.isArray(items)
+    ? items.reduce((total, item) => total + item.cantidad, 0)
+    : 0;
+  const displayItems = totalItems > 9 ? "+9" : totalItems;
 
   return (
     <Disclosure
@@ -124,7 +127,9 @@ export default function Navbar({ navigation }: { navigation: NavItem[] }) {
             </div>
             <div className="hidden sm:ml-6 sm:block">
               <div className="flex space-x-4">
+                {/* Secciones de la navbar */}
                 {navigation.map((item) =>
+                  // Si el componente tiene hijos o componentes heredados (Categorias)
                   item.children ? (
                     <div key={item.name} className="relative group rounded-md text-right">
                       <div
@@ -137,14 +142,14 @@ export default function Navbar({ navigation }: { navigation: NavItem[] }) {
                         )}
                       >
                         {item.name}
-                        <span className="material-symbols-outlined text-sm fill-cream transition-all ease-in-out duration-200 group-hover:rotate-180">
+                        <span className="material-symbols-outlined transition-all ease-in-out duration-200 group-hover:rotate-180">
                           expand_more
                         </span>
                       </div>
                       <nav className="absolute hidden group-hover:block origin-top-right w-48 pt-2 z-50">
                         <div className="bg-cream shadow-lg shadow-cream/40 divide-y divide-espresso/10 rounded-md overflow-hidden">
                           {item.children.map((child) => {
-                            const isCurrent = pathname === child.href;
+                            const isCurrent = pathname === child.href; // Verifica si estamos ubicados en alguno de los hijos
                             return (
                               <Button
                                 as="a"
@@ -197,25 +202,40 @@ export default function Navbar({ navigation }: { navigation: NavItem[] }) {
               <span className="sr-only">Buscar</span>
               <span className="material-symbols-outlined text-2xl leading-none">search</span>
             </Button>
-            <div className="flex items-center justify-center">
+            <div className="flex items-center  justify-center">
               <Button
                 as="button"
                 onClick={() => openDrawer("Carrito")}
                 aria-expanded={activeDrawer === "Carrito"}
                 className={classNames(
-                  "relative inline-flex items-center justify-center rounded-md p-2 focus:outline-none transition-all duration-200 ease-in-out",
+                  "relative inline-flex items-center  justify-center rounded-md p-2 focus:outline-none transition-all duration-200 ease-in-out",
                   iconButtonHover,
+                  isItemAdded && "cart-animate cart-pulse",
                 )}
               >
                 <span className="absolute -inset-1.5" />
                 <span className="sr-only">Carrito</span>
-                <span className="material-symbols-outlined text-2xl leading-none">
+                <span
+                  className={`material-symbols-outlined  text-2xl leading-none transition-transform duration-300 ${
+                    isItemAdded ? "scale-150  -rotate-45" : "scale-100 rotate-0"
+                  }`}
+                >
                   shopping_cart
                 </span>
               </Button>
-              <p className="flex text-sans text-body-sm xl:text-heading-md min-w-3">
-                {isMounted ? totalItems : 0}
+              {/* Items */}
+              <p
+                className={`flex text-sans text-body-sm xl:text-heading-md min-w-3 transition-all duration-300 ${
+                  isItemAdded ? "scale-125 text-gold-dark font-bold" : "scale-100"
+                }`}
+              >
+                {isMounted ? displayItems : 0}
               </p>
+
+              {/* Efecto círculo */}
+              {isItemAdded && (
+                <div className="absolute inset-0 rounded-md animate-ping bg-terracota/20" />
+              )}
             </div>
           </div>
         </div>

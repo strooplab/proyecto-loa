@@ -21,4 +21,6 @@ export interface CartState {
   clearCart: () => void;
   getTotalItems: () => number;
   getSubtotal: () => number;
+  resetAnimation: () => void;
+  isItemAdded: boolean;
 }

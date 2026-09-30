@@ -7,6 +7,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/effect-fade";
 import Image from "next/image";
+import Link from "next/link";
 import { Button } from "@headlessui/react";
 
 export default function HeroSwiperClient() {
@@ -22,7 +23,7 @@ export default function HeroSwiperClient() {
       {/* Slide 1 */}
       <SwiperSlide className="relative h-full w-full">
         <Image
-          src="https://pub-415cf98523294c368075ea9561ec3752.r2.dev/categorias/blusas/blusa-rombos-elegante/1.png"
+          src={`${process.env.NEXT_PUBLIC_R2_PUBLIC_URL}/categorias/blusas/blusa-rombos-elegante/1.png`}
           alt="image 1"
           fill
           priority
@@ -40,16 +41,18 @@ export default function HeroSwiperClient() {
               Apasiona e inspira a quienes amas con lo mejor de la moda.
             </p>
             <div className="flex justify-center gap-2">
-              <Button
-                as="a"
+              <Link
                 href="/categorias"
                 className="rounded-lg bg-cream px-5 py-3 font-medium text-espresso hover:bg-cream/80 transition"
               >
                 Explora
-              </Button>
-              <Button className="rounded-lg border border-cream px-5 py-3 font-medium text-cream hover:bg-cream/10 transition">
+              </Link>
+              <Link
+                href="/contacto"
+                className="rounded-lg border border-cream px-5 py-3 font-medium text-cream hover:bg-cream/10 transition"
+              >
                 Contacto
-              </Button>
+              </Link>
             </div>
           </div>
         </div>
@@ -72,16 +75,18 @@ export default function HeroSwiperClient() {
               La experiencia de más de 30 años de trabajo que nos une.
             </p>
             <div className="flex gap-2">
-              <Button
-                as="a"
+              <Link
                 href="/categorias"
                 className="rounded-lg bg-cream px-5 py-3 font-medium text-espresso hover:bg-cream/80 transition"
               >
                 Explora
-              </Button>
-              <Button className="rounded-lg border border-cream px-5 py-3 font-medium text-cream hover:bg-cream/10 transition">
+              </Link>
+              <Link
+                href="/nosotros"
+                className="rounded-lg border border-cream px-5 py-3 font-medium text-cream hover:bg-cream/10 transition"
+              >
                 Nosotros
-              </Button>
+              </Link>
             </div>
           </div>
         </div>
@@ -105,16 +110,18 @@ export default function HeroSwiperClient() {
               se atreve a <span>soñar</span>.
             </p>
             <div className="flex gap-2">
-              <Button
-                as="a"
+              <Link
                 href="/categorias"
                 className="rounded-lg bg-cream px-5 py-3 font-medium text-espresso hover:bg-cream/80 transition"
               >
                 Explora
-              </Button>
-              <Button className="rounded-lg border border-cream px-5 py-3 font-medium text-cream hover:bg-cream/10 transition">
+              </Link>
+              <Link
+                href="/contacto"
+                className="rounded-lg border border-cream px-5 py-3 font-medium text-cream hover:bg-cream/10 transition"
+              >
                 Contacto
-              </Button>
+              </Link>
             </div>
           </div>
         </div>

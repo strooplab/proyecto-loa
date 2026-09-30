@@ -8,6 +8,7 @@ export const useCarrito = create<CartState>()(
   persist(
     (set, get) => ({
       items: [],
+      isItemAdded: false,
 
       // Añadir item o aumentar cantidad del item existente en el carrito
       addItem: (newItem) => {
@@ -22,11 +23,16 @@ export const useCarrito = create<CartState>()(
           if (existingIndex > -1) {
             const updatedItems = [...state.items];
             updatedItems[existingIndex].cantidad += newItem.cantidad;
-            return { items: updatedItems };
+            return { items: updatedItems, isItemAdded: true };
           }
 
-          return { items: [...state.items, newItem] };
+          return { items: [...state.items, newItem], isItemAdded: true };
         });
+
+        // Reset de la animación (0.6s)
+        setTimeout(() => {
+          set({ isItemAdded: false });
+        }, 600);
       },
 
       // Eliminar de carrito
@@ -61,9 +67,13 @@ export const useCarrito = create<CartState>()(
       getSubtotal: () => {
         return get().items.reduce((total, item) => total + item.precio * item.cantidad, 0);
       },
+
+      // Resetear animación manualmente
+      resetAnimation: () => set({ isItemAdded: false }),
     }),
     {
       name: "loa-cart-storage",
+      partialize: (state) => ({ items: state.items }),
     },
   ),
 );

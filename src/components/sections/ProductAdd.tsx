@@ -144,12 +144,12 @@ export default function ProductAddSection({ productoItem, allColors }: ProductAd
         </div>
       </div>
 
-      {/* Botón de Agregar a la bolsa */}
+      {/* Botón de Agregar al carrito */}
       <Button
         type="submit"
-        className="mt-8 flex w-full items-center justify-center rounded-md border border-transparent bg-terracota px-8 py-3 text-base font-medium text-cream hover:bg-espresso/90 focus:outline-none focus:ring-2 focus:ring-espresso focus:ring-offset-2 transition-colors shadow-md cursor-pointer"
+        className="mt-8 flex w-full items-center justify-center rounded-md border border-transparent bg-terracota px-8 py-3 text-base font-medium text-cream hover:bg-terracota/80 focus:outline-none focus:ring-2 focus:ring-espresso focus:ring-offset-2 transition-colors shadow-md cursor-pointer"
       >
-        Añadir a la bolsa
+        Añadir al carrito
       </Button>
     </form>
   );

@@ -1,6 +1,5 @@
 import { Suspense } from "react";
 import Image from "next/image";
-import { Button } from "@headlessui/react";
 import CategoriasPreview from "@/components/services/CategoriasPreview";
 import CategoriesSkeleton from "@/components/skeletons/CategoriesSkeleton";
 import HeroSwiperClient from "@/components/sections/HeroSwiperClient";
@@ -33,9 +32,12 @@ export default function Home() {
                 historia de más de 30 años de experiencia continua.
               </h3>
             </div>
-            <Button className="rounded-lg border border-espresso mt-2 px-5 py-3 font-medium text-espresso hover:bg-espresso/10 transition">
+            <Link
+              href="/nosotros"
+              className="rounded-lg border border-espresso mt-2 px-5 py-3 font-medium text-espresso hover:bg-espresso/10 transition"
+            >
               Quienes somos &rarr;
-            </Button>
+            </Link>
           </div>
         </section>
         <section className="mx-auto h-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -61,18 +63,19 @@ export default function Home() {
               <figure className="mt-10">
                 <blockquote className="text-center text-xl/8 font-semibold text-espresso/60 sm:text-2xl/9">
                   <p>
-                    “Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo expedita voluptas
-                    culpa sapiente alias molestiae. Numquam corrupti in laborum sed rerum et
-                    corporis.”
+                    “Soy una diseñadora de modas apasionada por crear prendas que resalten la
+                    feminidad, la silueta y reflejan la esencia de cada mujer. Diseño con
+                    sensibilidad, elegancia y atención a cada detalle, porque vestir bien es
+                    sentirse auténtica”
                   </p>
                 </blockquote>
                 <figcaption className="mt-10">
                   <Image
-                    alt=""
-                    src="https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg"
+                    alt="Diseñadora"
+                    src={`${process.env.NEXT_PUBLIC_R2_PUBLIC_URL}/testimonios/disenadora/1.png`}
                     width={500}
                     height={500}
-                    className="mx-auto size-10 rounded-full"
+                    className="mx-auto size-20 rounded-full"
                   />
                   <div className="mt-4 flex items-center justify-center space-x-3 text-base">
                     <div className="font-semibold text-espresso">Lucero Ortega</div>

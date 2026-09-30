@@ -19,10 +19,15 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import clsx from "clsx";
+import { useRouter } from "next/navigation";
 import { useCarrito } from "@/store/useCarrito";
 import { handleWhatsAppCheckout } from "@/utils/sendCheckoutWhatsappMessage";
 
 export default function CheckoutPage() {
+  // INICIALIZACIÓN DE VARIABLES
+  // Inicialización de router
+  const router = useRouter();
+
   // Datos del carrito
   const items = useCarrito((state) => state.items);
   const updateQuantity = useCarrito((state) => state.updateCantidad);
@@ -46,9 +51,10 @@ export default function CheckoutPage() {
     nota: "",
   });
 
-  const [intentoEnviar, setIntentoEnviar] = useState(false);
-  const [rateLimitedUntil, setRateLimitedUntil] = useState<number | null>(null);
+  const [intentoEnviar, setIntentoEnviar] = useState(false); // Para manejar la ausencia de datos digitados en el formulario
+  const [rateLimitedUntil, setRateLimitedUntil] = useState<number | null>(null); // Definición del rate limit
 
+  // FUNCIONES
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
   ) => {
@@ -69,6 +75,11 @@ export default function CheckoutPage() {
       return;
     }
     setRateLimitedUntil(null);
+  };
+
+  // Función para botón cancelar compra
+  const handleCancelar = () => {
+    router.back();
   };
 
   return (
@@ -426,7 +437,7 @@ export default function CheckoutPage() {
                       Enviar por WhatsApp
                     </Button>
                     <Button
-                      type="button"
+                      onClick={handleCancelar}
                       className="rounded-md px-4 py-2 text-body-md font-medium text-espresso data-hover:bg-gray-100 cursor-pointer"
                     >
                       Cancelar
