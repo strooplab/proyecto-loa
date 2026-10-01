@@ -10,6 +10,7 @@ import FloatingWhatsApp from "@/components/ui/FloatingWhatsapp"; // UI Whatsapp 
 import { getNavigation } from "@/data/navigation"; // Hybrid Navigation
 import { Suspense } from "react";
 import { Skeleton } from "@/components/skeletons/StoreSkeleton";
+import NavbarSkeleton from "@/components/skeletons/NavBarSkeleton";
 
 export default async function PublicLayout({ children }: { children: React.ReactNode }) {
   const Navigation = await getNavigation();
@@ -17,10 +18,10 @@ export default async function PublicLayout({ children }: { children: React.React
   return (
     <ContextProvider>
       <div className="relative min-h-screen flex flex-col bg-cream">
-        <Suspense fallback={<Skeleton className="w-full h-24" />}>
+        <Suspense fallback={<NavbarSkeleton />}>
           <Navbar navigation={Navigation} />
         </Suspense>
-        <Suspense fallback={null}>
+        <Suspense fallback={<Skeleton className="w-8 h-8" />}>
           <Menubar navigation={Navigation} />
         </Suspense>
         <Carrito />

@@ -34,7 +34,11 @@ export default function ContactoPage() {
     }
     const result = await handleWhatsappContactForm(contactData);
     if (!result.success) {
-      setRateLimitedUntil(result.retryAt);
+      if (result.reason === "rate_limited") {
+        setRateLimitedUntil(result.retryAt);
+      } else {
+        console.log("Error al enviar form");
+      }
       return;
     }
     setRateLimitedUntil(null);

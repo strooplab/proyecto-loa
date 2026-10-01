@@ -4,7 +4,12 @@ import Link from "next/link";
 import { Producto } from "@/types/product";
 import formatPrice from "@/utils/formatPrice";
 
-export default function ProductCard({ producto }: { producto: Producto }) {
+type ProductoCard = Pick<
+  Producto,
+  "nombre" | "slug" | "categoria_slug" | "descripcion" | "precio" | "imagenes" | "colores"
+>;
+
+export default function ProductCard({ producto }: { producto: ProductoCard }) {
   return (
     <div className="group relative">
       <div className="aspect-square w-full overflow-hidden rounded-md bg-cream/50 object-cover group-hover:opacity-80 lg:aspect-auto lg:h-80 border border-espresso/10">

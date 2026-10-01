@@ -7,7 +7,7 @@ import { usePanel } from "@/components/context/PanelContext";
 import { NavItem } from "@/data/navigation";
 import { useCarrito } from "@/store/useCarrito";
 
-function classNames(...classes: string[]) {
+function classNames(...classes: (string | false | null | undefined)[]) {
   return classes.filter(Boolean).join(" ");
 }
 
@@ -225,8 +225,10 @@ export default function Navbar({ navigation }: { navigation: NavItem[] }) {
               </Button>
               {/* Items */}
               <p
-                className={`flex text-sans text-body-sm xl:text-heading-md min-w-3 transition-all duration-300 ${
-                  isItemAdded ? "scale-125 text-gold-dark font-bold" : "scale-100"
+                className={`flex text-sans px-2 text-body-sm xl:text-heading-md min-w-3 transition-all duration-300 ${
+                  isItemAdded
+                    ? "scale-125 rounded-full bg-terracota text-cream font-bold"
+                    : "scale-100"
                 }`}
               >
                 {isMounted ? displayItems : 0}
@@ -234,7 +236,7 @@ export default function Navbar({ navigation }: { navigation: NavItem[] }) {
 
               {/* Efecto círculo */}
               {isItemAdded && (
-                <div className="absolute inset-0 rounded-md animate-ping bg-terracota/20" />
+                <div className="absolute inset-0 rounded-md animate-ping bg-terracota/40" />
               )}
             </div>
           </div>

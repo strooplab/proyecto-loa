@@ -1,5 +1,6 @@
 // @/utils/sendContactWhatsappMessage.ts
 import { WhatsappSendResult } from "@/types/sendWhatsapp";
+import { verificarContacto } from "@/actions/verificarContacto";
 
 export interface ContactFormData {
   nombre: string;
@@ -11,17 +12,15 @@ export interface ContactFormData {
 export const handleWhatsappContactForm = async (
   formData: ContactFormData,
 ): Promise<WhatsappSendResult> => {
-  const res = await fetch("/api/ratelimit", {
-    method: "POST",
-    body: JSON.stringify({ type: "contact" }),
-  });
-  const { success, reset } = await res.json();
-
-  if (!success) {
-    return { success: false, reason: "rate_limited", retryAt: reset };
-  }
+  // Fix: Se abre antes del await para que el navegador no la bloquee
+  const ventana = window.open("", "_blank");
 
   try {
+    const r = await verificarContacto();
+    if (!r.ok) {
+      ventana?.close();
+      return { success: false, reason: "rate_limited", retryAt: r.retryAt };
+    }
     let mensaje = `Hola, mi nombre es *${formData.nombre}* `;
     if (formData.email) {
       mensaje += `\nEmail: ${formData.email}`;
@@ -33,9 +32,13 @@ export const handleWhatsappContactForm = async (
 
     const telefonoNegocio = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER;
     const url = `https://wa.me/${telefonoNegocio}?text=${encodeURIComponent(mensaje)}`;
-    window.open(url, "_blank");
+    if (ventana) ventana.location.href = url;
+    else window.location.href = url;
+
+    return { success: true };
   } catch (e) {
+    ventana?.close();
     console.error("error trying to send whatsapp message: ", e);
+    return { success: false, reason: "error" };
   }
-  return { success: true };
 };

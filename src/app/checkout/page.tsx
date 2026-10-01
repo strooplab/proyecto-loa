@@ -19,6 +19,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import clsx from "clsx";
+import { cartKey } from "@/utils/cartKey";
 import { useRouter } from "next/navigation";
 import { useCarrito } from "@/store/useCarrito";
 import { handleWhatsAppCheckout } from "@/utils/sendCheckoutWhatsappMessage";
@@ -52,7 +53,10 @@ export default function CheckoutPage() {
   });
 
   const [intentoEnviar, setIntentoEnviar] = useState(false); // Para manejar la ausencia de datos digitados en el formulario
+  const [enviando, setEnviando] = useState(false); //  En proceso de envío
+  const [errorEnvio, setErrorEnvio] = useState(false); // Resultado
   const [rateLimitedUntil, setRateLimitedUntil] = useState<number | null>(null); // Definición del rate limit
+  const clearCart = useCarrito((state) => state.clearCart);
 
   // FUNCIONES
   const handleChange = (
@@ -64,17 +68,24 @@ export default function CheckoutPage() {
   const handleEnviarWhatsApp = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIntentoEnviar(true);
-
     // Campos obligatorios
-    if (!formData.nombre || !formData.celular || !formData.ciudad || !formData.direccion) {
-      return; // Detiene el envío si falta un campo
+    if (!formData.nombre || !formData.celular || !formData.ciudad || !formData.direccion) return; // Detiene el envío si falta un campo
+    if (enviando) return;
+
+    setEnviando(true);
+    setErrorEnvio(false);
+    try {
+      const result = await handleWhatsAppCheckout(items, formData);
+      if (!result.success) {
+        if (result.reason === "rate_limited") setRateLimitedUntil(result.retryAt); // Error en caso de rate limit
+        else setErrorEnvio(true); // Error general
+        return;
+      }
+      setRateLimitedUntil(null);
+      clearCart();
+    } finally {
+      setEnviando(false);
     }
-    const result = await handleWhatsAppCheckout(items, subtotal, formData);
-    if (!result.success) {
-      setRateLimitedUntil(result.retryAt);
-      return;
-    }
-    setRateLimitedUntil(null);
   };
 
   // Función para botón cancelar compra
@@ -110,9 +121,12 @@ export default function CheckoutPage() {
                           const imageUrl = Array.isArray(producto.imagen)
                             ? producto.imagen[0]
                             : producto.imagen;
-
                           return (
-                            <li key={producto.id} className="flex py-6">
+                            // Fix: Consola soltaba error porque solo se usaba el id unico del articulo, cuando en el carrito puede haber el mismo artículo con diferente tamaño o color
+                            <li
+                              key={cartKey(producto.id, producto.talla, producto.color)}
+                              className="flex py-6"
+                            >
                               <div className="size-24 shrink-0 overflow-hidden rounded-md border border-espresso/10">
                                 <Image
                                   src={`${process.env.NEXT_PUBLIC_R2_PUBLIC_URL}/${imageUrl}`}
@@ -414,14 +428,19 @@ export default function CheckoutPage() {
                         {new Date(rateLimitedUntil).toLocaleTimeString()}.
                       </p>
                     )}
+                    {errorEnvio && (
+                      <p className="text-sm text-red-500 mt-2">
+                        No pudimos crear tu pedido, intenta de nuevo.
+                      </p>
+                    )}
                   </Fieldset>
                   <div className="flex flex-col p-4 gap-4 mt-2">
                     <Button
                       type="submit"
-                      disabled={items.length === 0}
+                      disabled={items.length === 0 || enviando}
                       className={clsx(
                         "flex items-center justify-center gap-2 rounded-md px-4 py-2 text-body-md font-medium text-white transition-colors",
-                        items.length === 0
+                        items.length === 0 || enviando
                           ? "bg-gray-400 cursor-not-allowed"
                           : "bg-green-600 data-hover:bg-green-700 cursor-pointer",
                       )}

@@ -11,7 +11,11 @@ export default function FloatingWhatsApp() {
     const result = await SendWhatsAppMessage();
 
     if (!result.success) {
-      setRateLimitedUntil(result.retryAt);
+      if (result.reason === "rate_limited") {
+        if (result.reason === "rate_limited") setRateLimitedUntil(result.retryAt); // Error en caso de rate limit
+      } else {
+        console.log("Error al intentar enviar");
+      }
       return;
     }
 

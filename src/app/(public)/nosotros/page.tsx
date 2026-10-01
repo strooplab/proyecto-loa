@@ -55,6 +55,7 @@ export default function NosotrosPage() {
                 src="https://images.pexels.com/photos/601316/pexels-photo-601316.jpeg"
                 alt="Detalle de diseño y moda"
                 fill
+                loading="eager"
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 className="object-cover object-center"
               />

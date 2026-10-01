@@ -2,6 +2,7 @@
 import { CartItem } from "@/types/cartItem";
 import { WhatsappSendResult } from "@/types/sendWhatsapp";
 import formatPrice from "@/utils/formatPrice";
+import { crearPedido } from "@/actions/crearPedido";
 
 export interface CheckoutFormData {
   nombre: string;
@@ -16,44 +17,51 @@ export interface CheckoutFormData {
 // Generar link de WhatsApp con los datos del carrito y del formulario
 export const handleWhatsAppCheckout = async (
   items: CartItem[],
-  subtotal: number,
   formData: CheckoutFormData,
 ): Promise<WhatsappSendResult> => {
-  const res = await fetch("/api/ratelimit", {
-    method: "POST",
-    body: JSON.stringify({ type: "checkout" }),
-  });
+  // Fix: Se abre antes del await para que el navegador no la bloquee
+  const ventana = window.open("", "_blank");
 
-  const { success, reset } = await res.json();
-  if (!success) {
-    return { success: false, reason: "rate_limited", retryAt: reset };
-  }
   try {
-    let mensaje = "¡Hola! Me gustaría hacer el siguiente pedido desde su tienda LOA:\n\n";
+    const r = await crearPedido(
+      items.map((i) => ({
+        id: i.id,
+        talla: i.talla,
+        color: i.color,
+        cantidad: i.cantidad,
+      })),
+      { ...formData, barrio: formData.barrio ?? "", nota: formData.nota ?? "" },
+    );
 
-    mensaje += "* Estos son mis datos de envío:*\n";
+    if (!r.ok) {
+      ventana?.close();
+      return { success: false, reason: "rate_limited", retryAt: r.retryAt };
+    }
+
+    let mensaje = `¡Hola! Quiero hacer el pedido #${r.id.slice(0, 8)} desde su tienda LOA:\n\n`;
+    mensaje += "*Mis datos de envío:*\n";
     mensaje += `• *Nombre:* ${formData.nombre}\n`;
     mensaje += `• *Celular:* ${formData.celular}\n`;
     mensaje += `• *Ciudad:* ${formData.ciudad}\n`;
-    mensaje += `• *Dirección:* ${formData.direccion} ${formData.barrio ? `(${formData.barrio})` : ""}\n`;
+    mensaje += `• *Dirección:* ${formData.direccion}${formData.barrio ? ` (${formData.barrio})` : ""}\n`;
     mensaje += `• *Método de pago:* ${formData.metodo}\n`;
-    if (formData.nota) {
-      mensaje += `• *Detalles adicionales:* ${formData.nota}\n`;
-    }
+    if (formData.nota) mensaje += `• *Detalles adicionales:* ${formData.nota}\n`;
 
-    mensaje += "\n*Y estos son los productos que pedí:*\n";
-    items.forEach((item) => {
-      mensaje += `- *${item.nombre}* (Talla: ${item.talla || "N/A"}, Color: ${item.color || "N/A"}) x${item.cantidad} - ${formatPrice(item.precio * item.cantidad)}\n`;
+    mensaje += "\n*Productos:*\n";
+    r.lineas.forEach((l) => {
+      mensaje += `- *${l.nombre}* (Talla: ${l.talla || "N/A"}, Color: ${l.color || "N/A"}) x${l.cantidad} - ${formatPrice(l.precio * l.cantidad)}\n`;
     });
+    mensaje += `\n*Subtotal:* ${formatPrice(r.subtotal)}\n`;
+    mensaje += "Estoy pendiente para coordinar el pago y el envío. ¡Muchas gracias!";
 
-    mensaje += `\n*Subtotal:* ${formatPrice(subtotal)}\n`;
-    mensaje += "Estoy pendiente para coordinar el pago y el envío. ¡Muchisimas gracias!";
+    const url = `https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER}?text=${encodeURIComponent(mensaje)}`;
+    if (ventana) ventana.location.href = url;
+    else window.location.href = url;
 
-    const telefonoNegocio = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER;
-    const url = `https://wa.me/${telefonoNegocio}?text=${encodeURIComponent(mensaje)}`;
-    window.open(url, "_blank");
+    return { success: true };
   } catch (e) {
-    console.log("error trying to send checkout information: ", e);
+    ventana?.close();
+    console.error("Error creando el pedido:", e);
+    return { success: false, reason: "error" };
   }
-  return { success: true };
 };

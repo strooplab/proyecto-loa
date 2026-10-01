@@ -19,7 +19,7 @@ export async function searchProducts(searchTerm: string = ""): Promise<Producto[
       p.descuento, p.stock, p.imagenes, p.dimensiones, p.destacado,
       cat.slug AS categoria_slug,
       COALESCE(
-        json_agg(DISTINCT jsonb_build_object('nombre', c.nombre, 'slug', c.slug, 'hex', c.hex))
+        json_agg(jsonb_build_object('nombre', c.nombre, 'slug', c.slug, 'hex', c.hex))
         FILTER (WHERE c.id IS NOT NULL), '[]'
       ) AS colores, 
       COALESCE( 

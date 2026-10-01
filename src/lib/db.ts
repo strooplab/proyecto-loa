@@ -4,7 +4,13 @@ import dotenv from "dotenv";
 
 dotenv.config({ debug: true });
 // Configuración de conexión
-const databaseConfig = {
+// Para Producción
+const databaseConfigProduccion = {
+  url: process.env.SUPABASE_URL,
+  ssl: { rejectUnauthorized: false },
+};
+// Para Development
+const databaseConfigDevelopment = {
   user: process.env.DB_USER,
   host: process.env.DB_HOST,
   database: process.env.DB_NAME,
@@ -17,12 +23,8 @@ let pool: Pool;
 
 if (process.env.NODE_ENV === "production") {
   pool = new Pool({
-    user: databaseConfig.user,
-    host: databaseConfig.host,
-    database: databaseConfig.database,
-    password: databaseConfig.password || "",
-    port: parseInt(databaseConfig.port || "5432"),
-    ssl: databaseConfig.ssl,
+    connectionString: databaseConfigProduccion.url,
+    ssl: databaseConfigProduccion.ssl,
     max: 20, // En producción este será el número máximo de clients
     idleTimeoutMillis: 30000,
     connectionTimeoutMillis: 2000,
@@ -34,12 +36,12 @@ if (process.env.NODE_ENV === "production") {
   };
   if (!globalPgPool.__pgPool) {
     globalPgPool.__pgPool = new Pool({
-      user: databaseConfig.user,
-      host: databaseConfig.host,
-      database: databaseConfig.database,
-      password: databaseConfig.password || "",
-      port: parseInt(databaseConfig.port || "5432"),
-      ssl: databaseConfig.ssl,
+      user: databaseConfigDevelopment.user,
+      host: databaseConfigDevelopment.host,
+      database: databaseConfigDevelopment.database,
+      password: databaseConfigDevelopment.password || "",
+      port: parseInt(databaseConfigDevelopment.port || "5432"),
+      ssl: databaseConfigDevelopment.ssl,
       max: 5,
       idleTimeoutMillis: 30000,
       connectionTimeoutMillis: 2000,

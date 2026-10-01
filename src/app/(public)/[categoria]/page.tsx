@@ -55,7 +55,9 @@ export default async function CategoriaPage({ params, searchParams }: categorias
 
   // Filtro por orden
   if (sort === "novedades") {
-    productos.sort((a, b) => new Date(b.creado_en).getTime() - new Date(a.creado_en).getTime());
+    productos.sort(
+      (a, b) => new Date(b.creado_en ?? 0).getTime() - new Date(a.creado_en ?? 0).getTime(),
+    );
   } else if (sort === "precio-asc") {
     productos.sort((a, b) => a.precio - b.precio);
   } else if (sort === "precio-desc") {

@@ -9,10 +9,11 @@ import "swiper/css/navigation";
 import { Button } from "@headlessui/react";
 import Link from "next/link";
 import ProductCard from "@/components/ui/ProductCard";
-import { Categoria, Producto } from "@/types/productPreview";
+import { Producto } from "@/types/product";
+import type { CategoriaPreview } from "@/services/previewProductsService";
 
 interface CategoriesClientProps {
-  initialCategories: Categoria[];
+  initialCategories: CategoriaPreview[];
   initialProducts: Producto[];
 }
 

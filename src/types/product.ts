@@ -20,15 +20,15 @@ export interface Producto {
   nombre: string;
   slug: string;
   descripcion: string | null;
-  detalles: string | null;
+  detalles?: string | null;
   precio: number;
   descuento: number | null;
   stock: number;
   imagenes: string[];
-  dimensiones: string | null;
+  dimensiones?: string | null;
   colores: ColorItem[];
   tallas: TallaItem[];
   destacado: boolean;
-  orden: number;
-  creado_en: string;
+  orden?: number;
+  creado_en?: string;
 }
