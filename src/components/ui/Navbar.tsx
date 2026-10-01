@@ -1,5 +1,4 @@
 "use client";
-import React from "react";
 import { useState, useEffect, Fragment } from "react";
 import { Disclosure, Button, Transition } from "@headlessui/react";
 import Link from "next/link";
@@ -18,10 +17,8 @@ export default function Navbar({ navigation }: { navigation: NavItem[] }) {
   const pathname = usePathname();
 
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    setIsMounted(true);
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
@@ -236,7 +233,7 @@ export default function Navbar({ navigation }: { navigation: NavItem[] }) {
                     : "scale-100"
                 }`}
               >
-                {isMounted ? displayItems : 0}
+                {displayItems}
               </p>
 
               {/* Efecto círculo */}
