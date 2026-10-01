@@ -11,6 +11,7 @@
   "dependencies": {
     "@headlessui/react": "^2.2.10",
     "@supabase/ssr": "^0.12.4",
+    "@tailwindcss/postcss": "^4.3.3",
     "autoprefixer": "^10.5.4",
     "bcryptjs": "^3.0.3",
     "better-auth": "^1.6.27",
@@ -29,7 +30,6 @@
     "zustand": "^5.0.15"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^20.19.43",
     "@types/pg": "^8.21.0",
     "@types/react": "^19",
