@@ -1,4 +1,5 @@
 "use client";
+import React from "react";
 import { useState, useEffect, Fragment } from "react";
 import { Disclosure, Button, Transition } from "@headlessui/react";
 import Link from "next/link";
@@ -59,7 +60,7 @@ export default function Navbar({ navigation }: { navigation: NavItem[] }) {
       className={`fixed top-0 left-0 z-50 w-full transition-all duration-300 p-3 ${navBg} `} // Nav Scroll Behavior
     >
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
-        <div className="relative flex h-16 items-center justify-between">
+        <div className="relative flex items-center justify-between py-2">
           <div className="flex items-center justify-center rounded-md sm:hidden sm:inset-auto sm:mr-6 sm:pl-0">
             {/* Mobile Menu Button */}
             <Button
@@ -117,12 +118,16 @@ export default function Navbar({ navigation }: { navigation: NavItem[] }) {
           {/* Local */}
           <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
             <div className="flex shrink-0 items-center">
-              <Link
-                href="/"
-                className="font-display text-3xl font-bold md:text-4xl tracking-tight uppercase"
-              >
-                <span className="inline sm:hidden">LOA</span>
-                <span className="hidden sm:inline">LOA</span>
+              <Link href="/" aria-label="LOA logo" className="block h-24 w-24 md:h-12 md:w-16">
+                <span
+                  role="img"
+                  aria-label="LOA logo"
+                  className="block size-full bg-current transition-colors duration-300"
+                  style={{
+                    WebkitMask: "url(/loa.svg) center / contain no-repeat",
+                    mask: "url(/loa.svg) center / contain no-repeat",
+                  }}
+                />
               </Link>
             </div>
             <div className="hidden sm:ml-6 sm:block">
