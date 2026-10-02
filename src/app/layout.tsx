@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Jost, Cormorant_Garamond } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
 const corGaramond = Cormorant_Garamond({
@@ -15,6 +16,13 @@ const jost = Jost({
   display: "optional",
 });
 
+const materialSymbols = localFont({
+  // Fix: La carga de iconos ahora es local, ya que cargarlas remotamente hace que la página solo muestre los nombres de los iconos
+  src: "./fonts/MaterialSymbolsOutlined.woff2",
+  variable: "--font-icons",
+  display: "block",
+});
+
 export const metadata: Metadata = {
   title: "Lucero Ortega Atelier",
   description: "Una página web tipo E-Commerce Boutique con catálogo por categorías.",
@@ -23,18 +31,12 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
-      lang="en"
+      lang="es"
       translate="no"
-      className={`${corGaramond.variable} ${jost.variable} h-full antialiased notranslate`}
+      className={`${corGaramond.variable} ${jost.variable} ${materialSymbols.variable} h-full antialiased notranslate`}
     >
       <head>
-        {/* eslint-disable-next-line @next/next/no-page-custom-font */}
         <meta name="google" content="notranslate" />
-
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=optional"
-        />
       </head>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
