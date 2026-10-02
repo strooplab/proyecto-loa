@@ -54,10 +54,10 @@ export default function Navbar({ navigation }: { navigation: NavItem[] }) {
   return (
     <Disclosure
       as="nav"
-      className={`fixed top-0 left-0 z-50 w-full transition-all duration-300 p-3 ${navBg} `} // Nav Scroll Behavior
+      className={`fixed top-0 left-0 z-50 w-full px-3 transition-all duration-300 ${navBg} `} // Nav Scroll Behavior
     >
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
-        <div className="relative flex items-center justify-between py-2">
+        <div className="relative flex h-20 items-center justify-between md:h-28">
           <div className="flex items-center justify-center rounded-md sm:hidden sm:inset-auto sm:mr-6 sm:pl-0">
             {/* Mobile Menu Button */}
             <Button
@@ -113,9 +113,13 @@ export default function Navbar({ navigation }: { navigation: NavItem[] }) {
           </div>
           {/* </Link> */}
           {/* Local */}
-          <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-            <div className="flex shrink-0 items-center">
-              <Link href="/" aria-label="LOA logo" className="block h-24 w-24 md:h-12 md:w-16">
+          <div className="flex h-full flex-1 items-center justify-center sm:justify-start">
+            <div className="relative h-full w-20 shrink-0 md:w-24">
+              <Link
+                href="/"
+                aria-label="LOA logo"
+                className="absolute left-1/2 top-1/2 block -translate-x-1/2 -translate-y-1/2 h-20 w-20 md:h-24 md:w-24"
+              >
                 <span
                   role="img"
                   aria-label="LOA logo"
@@ -127,8 +131,8 @@ export default function Navbar({ navigation }: { navigation: NavItem[] }) {
                 />
               </Link>
             </div>
-            <div className="hidden sm:ml-6 sm:block">
-              <div className="flex space-x-4">
+            <div className="hidden sm:ml-6 sm:flex sm:items-center">
+              <div className="flex items-center space-x-4">
                 {/* Secciones de la navbar */}
                 {navigation.map((item) =>
                   // Si el componente tiene hijos o componentes heredados (Categorias)
