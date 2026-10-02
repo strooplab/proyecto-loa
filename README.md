@@ -4,7 +4,7 @@
 
 **E-Commerce para una marca de moda colombiana, con catálogo, carrito y pedidos al instante.**
 
-[![Version](https://img.shields.io/badge/version-0.1.0-C8553D?style=for-the-badge&logo=semver&logoColor=white)](https://semver.org/)
+[![Version](https://img.shields.io/badge/version-0.1.1-C8553D?style=for-the-badge&logo=semver&logoColor=white)](https://semver.org/)
 [![Status](https://img.shields.io/badge/status-en%20desarrollo-E0A458?style=for-the-badge)](https://github.com/strooplab/proyecto-loa.git)
 [![License](https://img.shields.io/badge/license-MIT-3B7A57?style=for-the-badge)](LICENSE)
 
@@ -67,12 +67,12 @@ LOA es una marca de moda dirigida por la diseñadora Lucero Ortega que vende sus
 
 ### Restricciones que definieron la solución
 
-| Restricción | Decisión |
-| --- | --- |
-| La diseñadora ya cierra las ventas por WhatsApp | El checkout no cobra en línea: genera el pedido y abre una conversación con el mensaje armado. |
+| Restricción                                                                                    | Decisión                                                                                                       |
+| ---------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| La diseñadora ya cierra las ventas por WhatsApp                                                | El checkout no cobra en línea: genera el pedido y abre una conversación con el mensaje armado.                 |
 | No se tenia noción de como se podría manejar envíos nacionales, todo pedido era a nivel local. | La tienda permite mostrar el subtotal "sin envío" y deja que el costo de envío se determine con la diseñadora. |
-| Presupuesto y operación pequeños | Servicios gestionados con capa gratuita: Supabase, Cloudflare R2 y Vercel. |
-| El catálogo cambia con poca frecuencia | Páginas con caché y revalidación de 1 hora en lugar de renderizado en cada petición. |
+| Presupuesto y operación pequeños                                                               | Servicios gestionados con capa gratuita: Supabase, Cloudflare R2 y Vercel.                                     |
+| El catálogo cambia con poca frecuencia                                                         | Páginas con caché y revalidación de 1 hora en lugar de renderizado en cada petición.                           |
 
 ### Objetivo
 
@@ -106,19 +106,19 @@ Dar a la marca un catálogo propio y un registro confiable de cada solicitud, si
 
 ## Stack tecnológico
 
-| Capa | Tecnología | Uso |
-| --- | --- | --- |
-| Framework | Next.js (App Router, Cache Components) | Renderizado, rutas, server actions |
-| Lenguaje | TypeScript | Lenguaje tipado de punta a punta |
-| UI | React, Headless UI, Swiper | Componentes accesibles y carrusel de productos |
-| Estilos | Tailwind CSS | Diseño de estilos |
-| Estado | Zustand (`persist`) | Carrito en localStorage |
-| Base de datos | Supabase (PostgreSQL) | Catálogo, pedidos, rate limit |
-| Cliente de BD | `pg` con pool | Consultas SQL directas (No ORM) |
-| Autenticación | Better Auth | Instalado, pero se usará cuando se implemente el portal de administrador |
-| Almacenamiento | Cloudflare R2 | Repositorio de imágenes |
-| Mensajería | WhatsApp (`wa.me`) | Sistema de checkout |
-| Despliegue | Vercel | Hosting |
+| Capa           | Tecnología                             | Uso                                                                      |
+| -------------- | -------------------------------------- | ------------------------------------------------------------------------ |
+| Framework      | Next.js (App Router, Cache Components) | Renderizado, rutas, server actions                                       |
+| Lenguaje       | TypeScript                             | Lenguaje tipado de punta a punta                                         |
+| UI             | React, Headless UI, Swiper             | Componentes accesibles y carrusel de productos                           |
+| Estilos        | Tailwind CSS                           | Diseño de estilos                                                        |
+| Estado         | Zustand (`persist`)                    | Carrito en localStorage                                                  |
+| Base de datos  | Supabase (PostgreSQL)                  | Catálogo, pedidos, rate limit                                            |
+| Cliente de BD  | `pg` con pool                          | Consultas SQL directas (No ORM)                                          |
+| Autenticación  | Better Auth                            | Instalado, pero se usará cuando se implemente el portal de administrador |
+| Almacenamiento | Cloudflare R2                          | Repositorio de imágenes                                                  |
+| Mensajería     | WhatsApp (`wa.me`)                     | Sistema de checkout                                                      |
+| Despliegue     | Vercel                                 | Hosting                                                                  |
 
 ---
 
@@ -161,15 +161,15 @@ La tabla `pedidos` guarda precios de lista. El precio final y el envío se negoc
 
 Tablas principales (resumen):
 
-| Tabla | Propósito |
-| --- | --- |
-| `categorias` | Categorías activas y su orden |
-| `productos` | Catálogo, precio, stock, imágenes, visibilidad |
-| `colores`, `tallas` y tablas puente | Variantes por producto |
-| `pedidos` | Datos del cliente, subtotal, estado, IP y user agent |
-| `pedido_items` | Líneas del pedido con nombre, talla y color como instantánea |
-| `rate_limit_hits` | Registro de intentos para el límite de solicitudes |
-| Tablas de Better Auth | Usuarios, sesiones y cuentas |
+| Tabla                               | Propósito                                                    |
+| ----------------------------------- | ------------------------------------------------------------ |
+| `categorias`                        | Categorías activas y su orden                                |
+| `productos`                         | Catálogo, precio, stock, imágenes, visibilidad               |
+| `colores`, `tallas` y tablas puente | Variantes por producto                                       |
+| `pedidos`                           | Datos del cliente, subtotal, estado, IP y user agent         |
+| `pedido_items`                      | Líneas del pedido con nombre, talla y color como instantánea |
+| `rate_limit_hits`                   | Registro de intentos para el límite de solicitudes           |
+| Tablas de Better Auth               | Usuarios, sesiones y cuentas                                 |
 
 Los pedidos guardan una instantánea del nombre, la talla y el color de cada ítem, de modo que el historial no cambia si el producto se edita o se elimina después.
 
@@ -207,7 +207,9 @@ El cliente nunca envía precios: el servidor los lee de `productos`, de modo que
 - Consultas parametrizadas en todo el acceso a la base de datos.
 - Variables sensibles sin el prefijo `NEXT_PUBLIC_`.
 - Row Level Security habilitado en las tablas de Supabase.
+
 <!-- TODO: confirma con SELECT tablename, rowsecurity FROM pg_tables WHERE schemaname = 'public'; antes de publicar -->
+
 - El proxy redirige `/admin` y `/api/admin` a `/login` sin sesión.
 
 > **Nota:** el proxy solo verifica la presencia de la cookie de sesión. Cuando el portal del administrador esté implementado, cada página y ruta debe validar la sesión en el servidor con Better Auth, impidiendo el traspaso del usuario final a contenido exclusivo del administrador y redireccionandolo a contenido público de libre acceso.
@@ -244,17 +246,17 @@ npm start
 
 ## Variables de entorno
 
-| Variable | Descripción |
-| --- | --- |
-| `DB_USER`, `DB_HOST`, `DB_NAME`, `DB_PASSWORD`, `DB_PORT` | Conexión a PostgreSQL local (desarrollo) |
-| `SUPABASE_URL` | Cadena de conexión del pooler de Supabase (producción) |
-| `BETTER_AUTH_SECRET` | Secreto de Better Auth |
-| `BETTER_AUTH_URL` | URL pública del sitio |
-| `NEXT_PUBLIC_URL` | URL base pública |
-| `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET_NAME` | Credenciales de Cloudflare R2 (repo) |
-| `NEXT_PUBLIC_R2_PUBLIC_URL` | URL pública del bucket |
-| `NEXT_PUBLIC_WHATSAPP_NUMBER` | Número de WhatsApp de la marca, con indicativo de país |
-| `NEXT_PUBLIC_EMAIL`, `NEXT_PUBLIC_ADDRESS`, `NEXT_PUBLIC_NUMBER` | Datos de contacto mostrados en el sitio |
+| Variable                                                                      | Descripción                                            |
+| ----------------------------------------------------------------------------- | ------------------------------------------------------ |
+| `DB_USER`, `DB_HOST`, `DB_NAME`, `DB_PASSWORD`, `DB_PORT`                     | Conexión a PostgreSQL local (desarrollo)               |
+| `SUPABASE_URL`                                                                | Cadena de conexión del pooler de Supabase (producción) |
+| `BETTER_AUTH_SECRET`                                                          | Secreto de Better Auth                                 |
+| `BETTER_AUTH_URL`                                                             | URL pública del sitio                                  |
+| `NEXT_PUBLIC_URL`                                                             | URL base pública                                       |
+| `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET_NAME` | Credenciales de Cloudflare R2 (repo)                   |
+| `NEXT_PUBLIC_R2_PUBLIC_URL`                                                   | URL pública del bucket                                 |
+| `NEXT_PUBLIC_WHATSAPP_NUMBER`                                                 | Número de WhatsApp de la marca, con indicativo de país |
+| `NEXT_PUBLIC_EMAIL`, `NEXT_PUBLIC_ADDRESS`, `NEXT_PUBLIC_NUMBER`              | Datos de contacto mostrados en el sitio                |
 
 ---
 
