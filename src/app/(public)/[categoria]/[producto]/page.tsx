@@ -45,6 +45,14 @@ export default async function ProductoPage({ params }: productoPageProps) {
                 </p>
               </div>
 
+              <div className="mt-3">
+                {productoItem.stock > 1 ? (
+                  <span className="text-body-lg text-espresso">En stock: {productoItem.stock}</span>
+                ) : (
+                  <span className="text-body-lg text-gray-500">No disponible</span>
+                )}
+              </div>
+
               <Suspense fallback={<Skeleton className="px-6 py-4" />}>
                 <ProductAddSection productoItem={productoItem} allColors={AllColors} />
               </Suspense>

@@ -1,18 +1,20 @@
 // @/components/ui/FloatingWhatsApp.tsx
 "use client";
 import { useState } from "react";
-import Link from "next/link";
 import { SendWhatsAppMessage } from "@/utils/sendWhatsappMessage";
 
 export default function FloatingWhatsApp() {
   const [rateLimitedUntil, setRateLimitedUntil] = useState<number | null>(null);
-  const handleClick = async (e: React.MouseEvent<HTMLAnchorElement>) => {
+  const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    const ventana = window.open("about:blank", "_blank"); // Fix: Ventana blank única
     const result = await SendWhatsAppMessage();
 
     if (!result.success) {
+      ventana?.close();
       if (result.reason === "rate_limited") {
-        if (result.reason === "rate_limited") setRateLimitedUntil(result.retryAt); // Error en caso de rate limit
+        // Fix: if duplicado corregido
+        setRateLimitedUntil(result.retryAt); // Error en caso de rate limit
       } else {
         console.log("Error al intentar enviar");
       }
@@ -21,18 +23,18 @@ export default function FloatingWhatsApp() {
 
     setRateLimitedUntil(null);
 
-    if (result.url) {
-      window.open(result.url, "_blank");
+    if (result.url && ventana) {
+      ventana.location.href = result.url;
+    } else {
+      ventana?.close();
     }
   };
 
   return (
     <div className="fixed bottom-6 right-6 z-50">
-      <Link
-        href="#"
+      <button
+        type="button"
         onClick={handleClick}
-        target="_blank"
-        rel="noopener noreferrer"
         aria-label="Chat de WhatsApp"
         className="group relative flex items-center justify-center w-14 h-14 bg-[#25D366] text-white rounded-full shadow-lg hover:bg-[#20ba5a] hover:scale-110 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#25D366] focus:ring-offset-2"
       >
@@ -55,7 +57,7 @@ export default function FloatingWhatsApp() {
             {new Date(rateLimitedUntil).toLocaleTimeString()}.
           </span>
         )}
-      </Link>
+      </button>
     </div>
   );
 }
