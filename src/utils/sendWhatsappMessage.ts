@@ -18,8 +18,19 @@ export async function SendWhatsAppMessage(): Promise<
       return { success: false, reason: "rate_limited", retryAt: r.retryAt };
     }
     const phoneNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER;
+    if (!phoneNumber) {
+      ventana?.close();
+      return { success: false, reason: "error" };
+    }
     const defaultMessage = "¡Hola! me gustaría recibir más información sobre las prendas.";
     const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(defaultMessage)}`;
+
+    if (ventana) {
+      ventana.location.href = url;
+    } else {
+      window.location.href = url;
+    }
+
     return { success: true, url };
   } catch (e) {
     console.error("error trying to send whatsapp message: ", e);

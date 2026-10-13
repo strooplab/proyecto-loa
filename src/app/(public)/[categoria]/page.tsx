@@ -145,20 +145,31 @@ export default async function CategoriaPage({ params, searchParams }: categorias
                     <div className="mt-4 flex justify-between">
                       <div>
                         <h3 className="text-sm text-gray-700">{p.nombre}</h3>
-                        <div className="mt-1 flex items-center gap-1.5">
-                          {Array.isArray(p.colores) ? (
-                            p.colores.map((col, idx) => (
-                              <span key={idx} className="text-xs text-gray-500">
-                                {col.nombre}
-                                {idx < p.colores.length - 1 ? " • " : ""}
-                              </span>
-                            ))
+                        <div className="mt-1">
+                          <div className="flex items-center gap-1.5">
+                            {Array.isArray(p.colores) ? (
+                              p.colores.map((col, idx) => (
+                                <span key={idx} className="text-xs text-gray-500">
+                                  {col.nombre}
+                                  {idx < p.colores.length - 1 ? " • " : ""}
+                                </span>
+                              ))
+                            ) : (
+                              <span className="text-xs text-gray-500">{p.colores}</span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex flex-col justify-between">
+                        <p className="text-sm font-medium text-gray-900">{formatPrice(p.precio)}</p>
+                        <div className="mt-1 flex items-center">
+                          {p.stock > 1 ? (
+                            <span className="text-xs text-espresso">En stock: {p.stock}</span>
                           ) : (
-                            <span className="text-xs text-gray-500">{p.colores}</span>
+                            <span className="text-xs text-gray-500">No disponible</span>
                           )}
                         </div>
                       </div>
-                      <p className="text-sm font-medium text-gray-900">{formatPrice(p.precio)}</p>
                     </div>
                   </Link>
                 );
