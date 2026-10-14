@@ -1,7 +1,8 @@
 // auth.ts
 import { betterAuth } from "better-auth";
 import { username } from "better-auth/plugins";
-import { pool } from "@/lib/db"; // TEMPORAL: DB PG fuera de producción
+import { pool } from "@/lib/db";
+import { nextCookies } from "better-auth/next-js"; // dev: Revisado, se mantiene
 
 export const auth = betterAuth({
   database: pool,
@@ -13,11 +14,13 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: false,
+    disableSignUp: true, // Refactor: SignUp eliminado, el sistema esta pensado para tener un solo administrador
   },
   plugins: [
     username({
       minUsernameLength: 3,
-      maxUsernameLength: 30, // Default de varias webapps que he visto
+      maxUsernameLength: 30, // Default
     }),
+    nextCookies(), // dev: Revisado, se mantiene
   ],
 });
