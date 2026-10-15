@@ -1,0 +1,9 @@
+$kind: http-request
+url: "{{base_url}}/api/admin/"
+method: GET
+auth:
+  type: basic
+  credentials:
+    username: luceroortegam45@gmail.com
+    password: Lulonaranja1
+order: 5000

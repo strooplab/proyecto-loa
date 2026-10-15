@@ -1,0 +1,5 @@
+$kind: http-request
+name: 'Get Productos'
+method: GET
+url: '{{base_url}}/api/public/productos'
+order: 2000

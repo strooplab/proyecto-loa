@@ -1,0 +1,12 @@
+$kind: http-request
+name: Get Session
+method: GET
+url: "{{base_url}}/admin"
+body:
+  type: json
+  content: |-
+    {
+      "email": "luceroortegam45@gmail.com",
+      "password": "Lulonaranja1"
+    }
+order: 4000

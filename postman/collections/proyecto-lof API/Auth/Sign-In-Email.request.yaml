@@ -1,0 +1,19 @@
+$kind: http-request
+name: Sign In (Email)
+method: POST
+url: "{{base_url}}/api/auth/sign-in/email"
+auth:
+  type: noauth
+settings:
+  disabledSystemHeaders:
+    - content-type
+order: 1000
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "email": "luceroortegam45@gmail.com",
+      "password": "Lulonaranja1"
+    }

@@ -1,0 +1,5 @@
+$kind: http-request
+name: 'Get Testimonios'
+method: GET
+url: '{{base_url}}/api/public/testimonios'
+order: 4000

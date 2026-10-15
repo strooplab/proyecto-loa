@@ -1,0 +1,5 @@
+$kind: http-request
+name: 'Get Testimonios (Admin)'
+method: GET
+url: '{{base_url}}/api/admin/testimonios'
+order: 3000

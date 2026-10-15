@@ -1,0 +1,3 @@
+$kind: collection
+name: Admin
+description: 'Admin endpoints — requires authenticated admin session'

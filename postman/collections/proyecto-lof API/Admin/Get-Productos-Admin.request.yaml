@@ -1,0 +1,5 @@
+$kind: http-request
+name: 'Get Productos (Admin)'
+method: GET
+url: '{{base_url}}/api/admin/productos'
+order: 2000

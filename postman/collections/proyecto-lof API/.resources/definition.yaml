@@ -1,0 +1,4 @@
+$kind: collection
+description: API collection for the proyecto-lof Next.js application
+variables:
+  base_url: ""

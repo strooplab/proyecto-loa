@@ -1,0 +1,5 @@
+$kind: http-request
+name: 'Get Pedidos'
+method: GET
+url: '{{base_url}}/api/admin/pedidos'
+order: 1000

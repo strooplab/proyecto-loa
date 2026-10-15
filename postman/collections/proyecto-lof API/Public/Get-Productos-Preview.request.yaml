@@ -1,0 +1,9 @@
+$kind: http-request
+name: 'Get Productos Preview (por categoría)'
+method: GET
+url: '{{base_url}}/api/public/productos/preview'
+order: 3000
+queryParams:
+  - key: categoria
+    value: ropa
+    description: 'Slug de la categoría (ej: ropa, accesorios)'
